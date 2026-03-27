@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Heart, Building, User, MapPin, Check, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react'
+import { Heart, Building, User, MapPin, Check, ChevronRight, ChevronLeft, Sparkles, Mail, KeyRound, ShieldCheck, RefreshCw } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { useToast } from '../components/Toast'
@@ -25,11 +25,18 @@ export default function OnboardingPage() {
     name: '', slug: '', phone: '', email: '', ruc: '', country: 'MX',
   })
   const [admin, setAdmin] = useState({
-    full_name: '', email: '', password: '', password_confirm: '',
+    full_name: '', email: '', password: '',
   })
   const [branch, setBranch] = useState({
     name: 'Sucursal Principal', address: '', phone: '',
   })
+
+  // Email verification state
+  const [emailVerified, setEmailVerified] = useState(false)
+  const [verifyPhase, setVerifyPhase] = useState<'input' | 'code_sent' | 'verified'>('input')
+  const [otpCode, setOtpCode] = useState('')
+  const [sendingCode, setSendingCode] = useState(false)
+  const [verifyingCode, setVerifyingCode] = useState(false)
 
   const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
@@ -37,11 +44,97 @@ export default function OnboardingPage() {
     setOrg(prev => ({ ...prev, name, slug: prev.slug || slugify(name) }))
   }
 
+  // Send OTP code to admin email
+  const handleSendCode = async () => {
+    if (!admin.email.trim()) return
+    if (!isConfigured) {
+      toast.info('Conecta Supabase para verificar correos')
+      // In demo mode, skip verification
+      setVerifyPhase('verified')
+      setEmailVerified(true)
+      return
+    }
+
+    setSendingCode(true)
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: admin.email,
+        options: {
+          shouldCreateUser: true,
+          data: { full_name: admin.full_name },
+        },
+      })
+      if (error) throw error
+      setVerifyPhase('code_sent')
+      toast.success('Codigo enviado a ' + admin.email)
+    } catch (err) {
+      console.error('OTP send error:', err)
+      toast.error('Error al enviar el codigo. Verifica el correo.')
+    } finally {
+      setSendingCode(false)
+    }
+  }
+
+  // Verify OTP code
+  const handleVerifyCode = async () => {
+    if (!otpCode.trim()) return
+
+    setVerifyingCode(true)
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: admin.email,
+        token: otpCode,
+        type: 'email',
+      })
+      if (error) throw error
+
+      setVerifyPhase('verified')
+      setEmailVerified(true)
+      toast.success('Correo verificado exitosamente')
+    } catch {
+      toast.error('Codigo incorrecto o expirado. Intenta de nuevo.')
+    } finally {
+      setVerifyingCode(false)
+    }
+  }
+
+  // Resend code
+  const handleResendCode = async () => {
+    setOtpCode('')
+    await handleSendCode()
+  }
+
+  // Reset email (go back to input)
+  const handleChangeEmail = () => {
+    setVerifyPhase('input')
+    setEmailVerified(false)
+    setOtpCode('')
+    // Sign out any existing session from OTP
+    supabase.auth.signOut()
+  }
+
   const canNext = () => {
     if (step === 1) return org.name.trim() && org.slug.trim()
-    if (step === 2) return admin.full_name.trim() && admin.email.trim() && admin.password.length >= 6 && admin.password === admin.password_confirm
+    if (step === 2) return admin.full_name.trim() && admin.email.trim() && emailVerified && admin.password.length >= 6
     if (step === 3) return branch.name.trim()
     return true
+  }
+
+  const handleStepNext = async () => {
+    if (step === 2 && emailVerified) {
+      // Before moving to step 3, update the password for the verified user
+      if (isConfigured) {
+        try {
+          const { error } = await supabase.auth.updateUser({ password: admin.password })
+          if (error) throw error
+        } catch (err) {
+          console.error('Password set error:', err)
+          toast.error('Error al establecer la contraseña')
+          return
+        }
+      }
+    }
+    setStep((step + 1) as Step)
   }
 
   const handleCreate = async () => {
@@ -67,13 +160,9 @@ export default function OnboardingPage() {
         return
       }
 
-      // 2. Create auth user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: admin.email,
-        password: admin.password,
-        options: { data: { full_name: admin.full_name } },
-      })
-      if (authError) throw authError
+      // 2. Get the current authenticated user (from OTP verification)
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      if (!authUser) throw new Error('No authenticated user found')
 
       // 3. Create company
       const { data: company, error: companyError } = await supabase
@@ -103,11 +192,11 @@ export default function OnboardingPage() {
         .single()
       if (storeError) throw storeError
 
-      // 6. Create admin user
+      // 6. Create admin user linked to the verified auth user
       const { error: userError } = await supabase
         .from('users')
         .insert({
-          auth_id: authData.user?.id,
+          auth_id: authUser.id,
           company_id: company.id, store_id: store.id,
           email: admin.email, full_name: admin.full_name,
           role: 'admin', is_active: true,
@@ -201,14 +290,14 @@ export default function OnboardingPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <Input label="Telefono" value={org.phone} onChange={e => setOrg(prev => ({ ...prev, phone: e.target.value }))} />
-                <Input label="Correo" type="email" value={org.email} onChange={e => setOrg(prev => ({ ...prev, email: e.target.value }))} />
+                <Input label="Correo de la clinica" type="email" value={org.email} onChange={e => setOrg(prev => ({ ...prev, email: e.target.value }))} />
               </div>
 
               <Input label="RFC / RUC" value={org.ruc} onChange={e => setOrg(prev => ({ ...prev, ruc: e.target.value }))} />
             </div>
           )}
 
-          {/* Step 2: Admin User */}
+          {/* Step 2: Admin User with Email Verification */}
           {step === 2 && (
             <div className="space-y-4">
               <div className="flex items-center gap-3 mb-6">
@@ -217,21 +306,112 @@ export default function OnboardingPage() {
                 </div>
                 <div>
                   <h2 className="font-semibold text-slate-900">Administrador</h2>
-                  <p className="text-xs text-slate-500">Cuenta del administrador principal</p>
+                  <p className="text-xs text-slate-500">Verifica tu correo y crea tu cuenta</p>
                 </div>
               </div>
 
               <Input label="Nombre completo *" value={admin.full_name}
-                onChange={e => setAdmin(prev => ({ ...prev, full_name: e.target.value }))} required />
-              <Input label="Correo electronico *" type="email" value={admin.email}
-                onChange={e => setAdmin(prev => ({ ...prev, email: e.target.value }))} required />
-              <Input label="Contraseña *" type="password" value={admin.password}
-                onChange={e => setAdmin(prev => ({ ...prev, password: e.target.value }))}
-                helperText="Minimo 6 caracteres" required />
-              <Input label="Confirmar contraseña *" type="password" value={admin.password_confirm}
-                onChange={e => setAdmin(prev => ({ ...prev, password_confirm: e.target.value }))}
-                error={admin.password_confirm && admin.password !== admin.password_confirm ? 'Las contraseñas no coinciden' : undefined}
+                onChange={e => setAdmin(prev => ({ ...prev, full_name: e.target.value }))}
+                disabled={verifyPhase === 'code_sent'}
                 required />
+
+              {/* Email + Verification Flow */}
+              <div className="space-y-3">
+                {verifyPhase === 'input' && (
+                  <>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-[34px] text-slate-400" size={16} />
+                      <Input label="Correo electronico *" type="email" value={admin.email}
+                        onChange={e => setAdmin(prev => ({ ...prev, email: e.target.value }))}
+                        className="pl-9" placeholder="tu@correo.com" required />
+                    </div>
+                    <Button
+                      onClick={handleSendCode}
+                      loading={sendingCode}
+                      disabled={!admin.email.trim() || !admin.full_name.trim()}
+                      variant="secondary"
+                      className="w-full"
+                      icon={<Mail size={16} />}
+                    >
+                      Enviar codigo de verificacion
+                    </Button>
+                    <p className="text-xs text-slate-400 text-center">
+                      Te enviaremos un codigo de 6 digitos para confirmar tu correo.
+                    </p>
+                  </>
+                )}
+
+                {verifyPhase === 'code_sent' && (
+                  <div className="space-y-3">
+                    {/* Show confirmed email */}
+                    <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                      <Mail size={18} className="text-blue-600 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-blue-900 truncate">{admin.email}</p>
+                        <p className="text-xs text-blue-600">Codigo enviado — revisa tu bandeja de entrada</p>
+                      </div>
+                      <button onClick={handleChangeEmail} className="text-xs text-blue-500 hover:text-blue-700 font-medium shrink-0">
+                        Cambiar
+                      </button>
+                    </div>
+
+                    {/* OTP Input */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Codigo de verificacion *</label>
+                      <div className="relative">
+                        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                        <input
+                          type="text"
+                          value={otpCode}
+                          onChange={e => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                          placeholder="000000"
+                          maxLength={6}
+                          className="input pl-9 text-center text-xl tracking-[0.5em] font-mono"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={handleVerifyCode}
+                      loading={verifyingCode}
+                      disabled={otpCode.length < 6}
+                      className="w-full"
+                      icon={<ShieldCheck size={16} />}
+                    >
+                      Verificar Codigo
+                    </Button>
+
+                    <button onClick={handleResendCode} disabled={sendingCode}
+                      className="w-full text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center justify-center gap-1.5 py-1">
+                      <RefreshCw size={14} className={sendingCode ? 'animate-spin' : ''} />
+                      {sendingCode ? 'Enviando...' : 'Reenviar codigo'}
+                    </button>
+                  </div>
+                )}
+
+                {verifyPhase === 'verified' && (
+                  <div className="space-y-3">
+                    {/* Verified email badge */}
+                    <div className="flex items-center gap-3 bg-success-50 border border-success-200 rounded-xl p-3">
+                      <ShieldCheck size={18} className="text-success-600 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-success-900 truncate">{admin.email}</p>
+                        <p className="text-xs text-success-600">Correo verificado</p>
+                      </div>
+                      <button onClick={handleChangeEmail} className="text-xs text-success-500 hover:text-success-700 font-medium shrink-0">
+                        Cambiar
+                      </button>
+                    </div>
+
+                    {/* Password (set after email verified) */}
+                    <Input label="Contraseña *" type="password" value={admin.password}
+                      onChange={e => setAdmin(prev => ({ ...prev, password: e.target.value }))}
+                      helperText="Minimo 6 caracteres — esta sera tu contraseña de acceso"
+                      required />
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -292,7 +472,7 @@ export default function OnboardingPage() {
               )}
 
               {step < 3 ? (
-                <Button onClick={() => setStep((step + 1) as Step)} disabled={!canNext()}>
+                <Button onClick={handleStepNext} disabled={!canNext()}>
                   Siguiente <ChevronRight size={16} />
                 </Button>
               ) : (
