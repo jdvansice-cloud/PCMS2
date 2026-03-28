@@ -25,7 +25,7 @@ export default function OnboardingPage() {
     name: '', slug: '', phone: '', email: '', ruc: '', country: 'MX',
   })
   const [admin, setAdmin] = useState({
-    full_name: '', email: '', password: '',
+    full_name: '', email: '',
   })
   const [branch, setBranch] = useState({
     name: 'Sucursal Principal', address: '', phone: '',
@@ -115,25 +115,12 @@ export default function OnboardingPage() {
 
   const canNext = () => {
     if (step === 1) return org.name.trim() && org.slug.trim()
-    if (step === 2) return admin.full_name.trim() && admin.email.trim() && emailVerified && admin.password.length >= 6
+    if (step === 2) return admin.full_name.trim() && admin.email.trim() && emailVerified
     if (step === 3) return branch.name.trim()
     return true
   }
 
-  const handleStepNext = async () => {
-    if (step === 2 && emailVerified) {
-      // Before moving to step 3, update the password for the verified user
-      if (isConfigured) {
-        try {
-          const { error } = await supabase.auth.updateUser({ password: admin.password })
-          if (error) throw error
-        } catch (err) {
-          console.error('Password set error:', err)
-          toast.error('Error al establecer la contraseña')
-          return
-        }
-      }
-    }
+  const handleStepNext = () => {
     setStep((step + 1) as Step)
   }
 
@@ -397,18 +384,12 @@ export default function OnboardingPage() {
                       <ShieldCheck size={18} className="text-success-600 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-success-900 truncate">{admin.email}</p>
-                        <p className="text-xs text-success-600">Correo verificado</p>
+                        <p className="text-xs text-success-600">Correo verificado — listo para continuar</p>
                       </div>
                       <button onClick={handleChangeEmail} className="text-xs text-success-500 hover:text-success-700 font-medium shrink-0">
                         Cambiar
                       </button>
                     </div>
-
-                    {/* Password (set after email verified) */}
-                    <Input label="Contraseña *" type="password" value={admin.password}
-                      onChange={e => setAdmin(prev => ({ ...prev, password: e.target.value }))}
-                      helperText="Minimo 6 caracteres — esta sera tu contraseña de acceso"
-                      required />
                   </div>
                 )}
               </div>
