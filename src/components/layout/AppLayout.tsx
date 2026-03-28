@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { TenantProvider } from '../../context/TenantContext'
+import { ErrorBoundary } from '../ui/ErrorBoundary'
 import { Menu } from 'lucide-react'
 
 function AppLayoutInner() {
@@ -53,8 +54,10 @@ function AppLayoutInner() {
 
 export function AppLayout() {
   return (
-    <TenantProvider>
-      <AppLayoutInner />
-    </TenantProvider>
+    <ErrorBoundary>
+      <TenantProvider>
+        <AppLayoutInner />
+      </TenantProvider>
+    </ErrorBoundary>
   )
 }
