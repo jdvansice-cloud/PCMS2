@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codigo de Verificacion</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F1F5F9;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F1F5F9;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="max-width:480px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 15px -3px rgba(0,0,0,0.07);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#0091C3 0%,#00749C 100%);padding:32px 40px;text-align:center;">
+              <div style="width:48px;height:48px;background-color:rgba(255,255,255,0.2);border-radius:12px;display:inline-block;line-height:48px;margin-bottom:12px;">
+                <span style="font-size:24px;">🏥</span>
+              </div>
+              <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:700;letter-spacing:-0.3px;">
+                {{ .SiteURL }}
+              </h1>
+              <p style="margin:4px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">
+                Sistema de Gestion Veterinaria
+              </p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:36px 40px;">
+              <h2 style="margin:0 0 8px;color:#0F172A;font-size:22px;font-weight:700;text-align:center;">
+                Tu codigo de verificacion
+              </h2>
+              <p style="margin:0 0 28px;color:#64748B;font-size:14px;line-height:1.6;text-align:center;">
+                Usa el siguiente codigo para verificar tu correo electronico y continuar con el registro.
+              </p>
+
+              <!-- OTP Code Box -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <div style="background-color:#F8FAFC;border:2px dashed #CBD5E1;border-radius:12px;padding:24px 32px;display:inline-block;">
+                      <span style="font-family:'Courier New',monospace;font-size:36px;font-weight:800;letter-spacing:12px;color:#0091C3;display:block;text-align:center;">
+                        {{ .Token }}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0;color:#94A3B8;font-size:12px;line-height:1.5;text-align:center;">
+                Este codigo expira en <strong style="color:#64748B;">10 minutos</strong>.<br>
+                Si no solicitaste este codigo, puedes ignorar este correo.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background-color:#E2E8F0;"></div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 40px 32px;text-align:center;">
+              <p style="margin:0 0 4px;color:#94A3B8;font-size:11px;">
+                Enviado por PCMS — Sistema de Gestion de Clinicas Veterinarias
+              </p>
+              <p style="margin:0;color:#CBD5E1;font-size:11px;">
+                No respondas a este correo. Es un mensaje automatico.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
