@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
-import { FaCalendarAlt, FaBan, FaClock, FaSignOutAlt } from 'react-icons/fa'
+import { FaCalendarAlt, FaBan, FaClock, FaTag, FaSignOutAlt } from 'react-icons/fa'
 import AdminCalendar from './AdminCalendar'
 import AppointmentList from './AppointmentList'
 import BlockedDatesManager from './BlockedDatesManager'
 import BusinessHoursManager from './BusinessHoursManager'
+import PromoManager from './PromoManager'
 
-type Tab = 'calendar' | 'blocked' | 'hours'
+type Tab = 'calendar' | 'blocked' | 'hours' | 'promo'
 
 interface Props {
   session: Session
@@ -25,6 +26,7 @@ export default function AdminLayout({ session }: Props) {
     { key: 'calendar' as Tab, label: 'Citas', icon: FaCalendarAlt },
     { key: 'blocked' as Tab, label: 'Fechas Bloqueadas', icon: FaBan },
     { key: 'hours' as Tab, label: 'Horarios', icon: FaClock },
+    { key: 'promo' as Tab, label: 'Promoción', icon: FaTag },
   ]
 
   return (
@@ -72,6 +74,7 @@ export default function AdminLayout({ session }: Props) {
         )}
         {tab === 'blocked' && <BlockedDatesManager />}
         {tab === 'hours' && <BusinessHoursManager />}
+        {tab === 'promo' && <PromoManager />}
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FaCalendarCheck } from 'react-icons/fa'
+import { FaCalendarCheck, FaTag } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
 import ServicePicker from './ServicePicker'
 import DatePicker from './DatePicker'
@@ -17,6 +17,22 @@ export default function BookingSection() {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [discount, setDiscount] = useState<{ percent: number; label: string } | null>(null)
+
+  useEffect(() => {
+    async function fetchPromo() {
+      const { data } = await supabase
+        .from('promo_settings')
+        .select('*')
+        .eq('is_active', true)
+        .single()
+
+      if (data && data.discount_percent > 0) {
+        setDiscount({ percent: data.discount_percent, label: data.label || '' })
+      }
+    }
+    fetchPromo()
+  }, [])
 
   function handleService(s: string) {
     setService(s)
@@ -87,6 +103,13 @@ export default function BookingSection() {
             {t('booking.title')}
           </h2>
           <p className="text-gray-500">{t('booking.subtitle')}</p>
+          {discount && (
+            <div className="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 font-bold text-sm px-5 py-2 rounded-full mt-4 shadow-sm">
+              <FaTag />
+              {discount.percent}% {t('booking.discountOff')}
+              {discount.label && ` — ${discount.label}`}
+            </div>
+          )}
         </div>
 
         {/* Progress bar */}
