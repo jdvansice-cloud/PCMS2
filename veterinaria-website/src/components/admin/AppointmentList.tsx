@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FaChevronLeft, FaCheck, FaTimes, FaFlag } from 'react-icons/fa'
+import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
 import type { WebBooking } from '../../lib/types'
 
@@ -39,6 +39,7 @@ function formatTime(time: string) {
 export default function AppointmentList({ date, onBack }: Props) {
   const [bookings, setBookings] = useState<WebBooking[]>([])
   const [loading, setLoading] = useState(true)
+  const [cancelId, setCancelId] = useState<number | null>(null)
 
   const fetchBookings = useCallback(async () => {
     const { data } = await supabase
@@ -88,50 +89,107 @@ export default function AppointmentList({ date, onBack }: Props) {
       ) : (
         <div className="space-y-3">
           {bookings.map(bk => (
-            <div key={bk.id} className="bg-white rounded-2xl shadow-sm p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="font-bold text-gray-800">{formatTime(bk.booking_time)}</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusColors[bk.status]}`}>
+            <div key={bk.id} className="bg-white rounded-2xl shadow-sm p-5">
+              {/* Header: time + status + actions */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="font-bold text-lg text-gray-800">{bk.booking_time ? formatTime(bk.booking_time) : 'Sin hora'}</span>
+                  <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${statusColors[bk.status]}`}>
                     {statusLabels[bk.status]}
                   </span>
+                  <span className="text-sm font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
+                    {serviceLabels[bk.service] || bk.service}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-700">
-                  <strong>{serviceLabels[bk.service] || bk.service}</strong> — {bk.pet_name} ({bk.pet_type})
-                </p>
-                <p className="text-sm text-gray-500">
-                  {bk.owner_name} · {bk.owner_phone}
-                  {bk.owner_email && ` · ${bk.owner_email}`}
-                </p>
-                {bk.notes && <p className="text-sm text-gray-400 mt-1">📝 {bk.notes}</p>}
+
+                {bk.status !== 'cancelled' && bk.status !== 'completed' && (
+                  <div className="flex gap-2 shrink-0">
+                    {bk.status === 'pending' && (
+                      <button
+                        onClick={() => updateStatus(bk.id, 'confirmed')}
+                        className="flex items-center gap-1 text-sm bg-green-50 text-green-600 font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-colors cursor-pointer"
+                      >
+                        <FaCheck /> Confirmar
+                      </button>
+                    )}
+                    <button
+                      onClick={() => updateStatus(bk.id, 'completed')}
+                      className="flex items-center gap-1 text-sm bg-blue-50 text-blue-600 font-bold px-3 py-2 rounded-xl hover:bg-blue-100 transition-colors cursor-pointer"
+                    >
+                      <FaFlag /> Completar
+                    </button>
+                    <button
+                      onClick={() => setCancelId(bk.id)}
+                      className="flex items-center gap-1 text-sm bg-red-50 text-red-600 font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-colors cursor-pointer"
+                    >
+                      <FaTimes /> Cancelar
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {bk.status !== 'cancelled' && bk.status !== 'completed' && (
-                <div className="flex gap-2 shrink-0">
-                  {bk.status === 'pending' && (
-                    <button
-                      onClick={() => updateStatus(bk.id, 'confirmed')}
-                      className="flex items-center gap-1 text-sm bg-green-50 text-green-600 font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-colors cursor-pointer"
-                    >
-                      <FaCheck /> Confirmar
-                    </button>
-                  )}
-                  <button
-                    onClick={() => updateStatus(bk.id, 'completed')}
-                    className="flex items-center gap-1 text-sm bg-blue-50 text-blue-600 font-bold px-3 py-2 rounded-xl hover:bg-blue-100 transition-colors cursor-pointer"
-                  >
-                    <FaFlag /> Completar
-                  </button>
-                  <button
-                    onClick={() => updateStatus(bk.id, 'cancelled')}
-                    className="flex items-center gap-1 text-sm bg-red-50 text-red-600 font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-colors cursor-pointer"
-                  >
-                    <FaTimes /> Cancelar
-                  </button>
+              {/* Details grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 text-gray-700">
+                  <FaPaw className="text-primary text-xs flex-shrink-0" />
+                  <span><strong>{bk.pet_name}</strong> ({bk.pet_type})</span>
                 </div>
-              )}
+                <div className="flex items-center gap-2 text-gray-700">
+                  <FaUser className="text-primary text-xs flex-shrink-0" />
+                  <span>{bk.owner_name}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-700">
+                  <FaPhone className="text-primary text-xs flex-shrink-0" />
+                  <a href={`tel:${bk.owner_phone}`} className="hover:underline">{bk.owner_phone}</a>
+                </div>
+                {bk.owner_email && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <FaEnvelope className="text-primary text-xs flex-shrink-0" />
+                    <a href={`mailto:${bk.owner_email}`} className="hover:underline">{bk.owner_email}</a>
+                  </div>
+                )}
+                {bk.notes && (
+                  <div className="flex items-start gap-2 text-gray-500 sm:col-span-2">
+                    <FaStickyNote className="text-primary text-xs flex-shrink-0 mt-0.5" />
+                    <span>{bk.notes}</span>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Cancel confirmation modal */}
+      {cancelId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setCancelId(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center">
+            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FaTimes className="text-2xl text-red-500" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Cancelar cita</h3>
+            <p className="text-gray-500 text-sm mb-6">
+              Esta acción no se puede deshacer. La cita será marcada como cancelada.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setCancelId(null)}
+                className="flex-1 py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
+              >
+                No, volver
+              </button>
+              <button
+                onClick={async () => {
+                  await updateStatus(cancelId, 'cancelled')
+                  setCancelId(null)
+                }}
+                className="flex-1 py-2.5 rounded-xl font-bold text-white bg-red-500 hover:bg-red-600 transition-colors cursor-pointer"
+              >
+                Sí, cancelar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

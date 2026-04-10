@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaCalendarCheck, FaTag } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
+import { isGroomingService } from '../../lib/types'
 import ServicePicker from './ServicePicker'
 import DatePicker from './DatePicker'
 import TimePicker from './TimePicker'
@@ -17,7 +18,10 @@ export default function BookingSection() {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [petInfo, setPetInfo] = useState<PetInfo | null>(null)
   const [discount, setDiscount] = useState<{ percent: number; label: string } | null>(null)
+
+  const isGrooming = isGroomingService(service)
 
   useEffect(() => {
     async function fetchPromo() {
@@ -41,7 +45,12 @@ export default function BookingSection() {
 
   function handleDate(d: string) {
     setDate(d)
-    setStep('time')
+    if (isGroomingService(service)) {
+      setTime('')
+      setStep('info')
+    } else {
+      setStep('time')
+    }
   }
 
   function handleTime(t: string) {
@@ -55,7 +64,7 @@ export default function BookingSection() {
       const { error } = await supabase.from('web_bookings').insert({
         service,
         booking_date: date,
-        booking_time: time,
+        booking_time: time || null,
         pet_name: info.petName,
         pet_type: info.petType,
         owner_name: info.ownerName,
@@ -67,7 +76,8 @@ export default function BookingSection() {
 
       if (error) throw error
 
-      // Fire-and-forget email notification
+      setPetInfo(info)
+
       supabase.functions.invoke('send-email', {
         body: { service, date, time, ...info },
       }).catch(() => {})
@@ -86,10 +96,13 @@ export default function BookingSection() {
     setService('')
     setDate('')
     setTime('')
+    setPetInfo(null)
   }
 
-  // Progress indicator
-  const steps: Step[] = ['service', 'date', 'time', 'info']
+  // Dynamic steps
+  const steps: Step[] = isGrooming
+    ? ['service', 'date', 'info']
+    : ['service', 'date', 'time', 'info']
   const currentIdx = steps.indexOf(step)
 
   return (
@@ -131,10 +144,16 @@ export default function BookingSection() {
 
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
           {step === 'service' && <ServicePicker onSelect={handleService} />}
-          {step === 'date' && <DatePicker onSelect={handleDate} onBack={() => setStep('service')} />}
+          {step === 'date' && <DatePicker onSelect={handleDate} onBack={() => setStep('service')} service={service} />}
           {step === 'time' && <TimePicker date={date} onSelect={handleTime} onBack={() => setStep('date')} />}
-          {step === 'info' && <PetInfoForm onSubmit={handleSubmit} onBack={() => setStep('time')} submitting={submitting} />}
-          {step === 'done' && <BookingConfirmation onReset={reset} />}
+          {step === 'info' && (
+            <PetInfoForm
+              onSubmit={handleSubmit}
+              onBack={() => setStep(isGrooming ? 'date' : 'time')}
+              submitting={submitting}
+            />
+          )}
+          {step === 'done' && <BookingConfirmation onReset={reset} service={service} date={date} time={time} petName={petInfo?.petName || ''} ownerName={petInfo?.ownerName || ''} />}
         </div>
       </div>
     </section>

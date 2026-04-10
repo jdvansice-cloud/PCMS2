@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import type { BusinessHours, WebBooking } from '../../lib/types'
+import type { DrAvailability, WebBooking } from '../../lib/types'
 
 export function useAvailableSlots(date: string | null) {
   const [slots, setSlots] = useState<string[]>([])
@@ -16,16 +16,17 @@ export function useAvailableSlots(date: string | null) {
       setLoading(true)
 
       const dateObj = new Date(date + 'T00:00:00')
-      const dayOfWeek = dateObj.getDay() // 0=Sun, 1=Mon, ...
+      const dayOfWeek = dateObj.getDay()
 
-      // Get business hours for this day
-      const { data: hours } = await supabase
-        .from('business_hours')
+      // Get all Dr. availability ranges for this day
+      const { data: ranges } = await supabase
+        .from('dr_availability')
         .select('*')
         .eq('day_of_week', dayOfWeek)
-        .single()
+        .eq('is_available', true)
+        .order('start_time')
 
-      if (!hours || !hours.is_open) {
+      if (!ranges || ranges.length === 0) {
         setSlots([])
         setLoading(false)
         return
@@ -43,37 +44,40 @@ export function useAvailableSlots(date: string | null) {
         return
       }
 
-      // Get existing bookings for this date
+      // Get existing consult bookings for this date
       const { data: bookings } = await supabase
         .from('web_bookings')
         .select('booking_time')
         .eq('booking_date', date)
+        .eq('service', 'vetConsult')
         .neq('status', 'cancelled')
 
       const bookedTimes = new Set(
         (bookings as Pick<WebBooking, 'booking_time'>[] || []).map(b => b.booking_time)
       )
 
-      // Generate available slots
-      const bh = hours as BusinessHours
-      const [openH, openM] = bh.open_time.split(':').map(Number)
-      const [closeH, closeM] = bh.close_time.split(':').map(Number)
-      const duration = bh.slot_duration_minutes
-
+      // Generate available slots from all ranges
       const available: string[] = []
-      let currentMin = openH * 60 + openM
-      const endMin = closeH * 60 + closeM
 
-      while (currentMin + duration <= endMin) {
-        const h = Math.floor(currentMin / 60)
-        const m = currentMin % 60
-        const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
+      for (const range of ranges as DrAvailability[]) {
+        const [openH, openM] = range.start_time.split(':').map(Number)
+        const [closeH, closeM] = range.end_time.split(':').map(Number)
+        const duration = range.slot_duration_minutes
 
-        if (!bookedTimes.has(timeStr)) {
-          available.push(timeStr)
+        let currentMin = openH * 60 + openM
+        const endMin = closeH * 60 + closeM
+
+        while (currentMin + duration <= endMin) {
+          const h = Math.floor(currentMin / 60)
+          const m = currentMin % 60
+          const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
+
+          if (!bookedTimes.has(timeStr)) {
+            available.push(timeStr)
+          }
+
+          currentMin += duration
         }
-
-        currentMin += duration
       }
 
       setSlots(available)
