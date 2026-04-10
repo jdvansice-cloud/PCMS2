@@ -1,0 +1,177 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "sterilization": "Sterilization",
+    "grooming": "Grooming",
+    "about": "About",
+    "gallery": "Gallery",
+    "booking": "Book",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "We care for your pet like family",
+    "subtitle": "Full-service veterinary clinic in Juan Díaz, Panama",
+    "cta": "Book an appointment"
+  },
+  "services": {
+    "title": "Our Services",
+    "clinic": "Veterinary Clinic",
+    "clinicDesc": "Consultations, diagnostics and treatments for your pet",
+    "lab": "Laboratory",
+    "labDesc": "Fast and reliable clinical analysis",
+    "pharmacy": "Pharmacy",
+    "pharmacyDesc": "Veterinary medications and supplements",
+    "petshop": "Pet Shop",
+    "petshopDesc": "Food, accessories and products for your pet",
+    "grooming": "Grooming / Hotel",
+    "groomingDesc": "Bath, grooming and boarding for your companion",
+    "funeral": "Funeral Arrangements & Cremations",
+    "funeralDesc": "Dignified and respectful farewell service for your pet"
+  },
+  "sterilization": {
+    "title": "Sterilization",
+    "subtitle": "Take care of your pet's health with a safe and professional procedure",
+    "dogs": "Dogs",
+    "cats": "Cats",
+    "requirements": "Requirements",
+    "req1": "12-hour fasting",
+    "req2": "Not nursing",
+    "req3": "Not in heat",
+    "req4": "Older than 5 months"
+  },
+  "groomingSection": {
+    "title": "Our Grooming Services & Packages",
+    "pkg1Title": "BATHS",
+    "pkg1Price": "$12.99",
+    "pkg1From": "From",
+    "pkg1Items": [
+      "Shampoo & conditioner bath",
+      "Blow dry",
+      "Towel dry",
+      "Ear cleaning",
+      "Nail trimming"
+    ],
+    "pkg2Title": "BATH & HAIRCUT",
+    "pkg2Price": "$23.99",
+    "pkg2From": "From",
+    "pkg2Items": [
+      "Shampoo & conditioner bath",
+      "Full body haircut",
+      "Face, paws & sanitary trim",
+      "Full coat brushing",
+      "Scissor finish",
+      "Nail trimming",
+      "Ear cleaning"
+    ],
+    "pkg3Title": "CAT BATH",
+    "pkg3Price": "$19.99",
+    "pkg3From": "From",
+    "pkg3Items": [
+      "Shampoo & conditioner bath",
+      "Blow dry",
+      "Towel dry",
+      "Nail trimming",
+      "Ear cleaning"
+    ]
+  },
+  "about": {
+    "title": "About Us",
+    "text1": "At Veterinaria Vida+ we are dedicated to the comprehensive care of your pet. Our team of professionals has the experience and commitment to provide quality care.",
+    "text2": "Located in Juan Díaz, Ciudad Radial, we are your trusted veterinary clinic with all the services your pet needs under one roof."
+  },
+  "testimonials": {
+    "title": "What our clients say",
+    "t1": "Excellent care for my puppy. The doctor is very kind and professional.",
+    "t1Author": "María G.",
+    "t2": "Fair prices and the grooming service makes my cat look beautiful.",
+    "t2Author": "Carlos R.",
+    "t3": "The best veterinary clinic in Juan Díaz. Always attentive and caring with pets.",
+    "t3Author": "Ana P."
+  },
+  "gallery": {
+    "title": "Gallery"
+  },
+  "contact": {
+    "title": "Contact & Location",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "address": "Address",
+    "addressText": "Juan Díaz, Ciudad Radial, Radiant Plaza, Local 1 & 2",
+    "hours": "Hours",
+    "hoursText": "Tuesday to Sunday: 9:00 AM - 5:30 PM | Monday: Closed",
+    "followUs": "Follow us"
+  },
+  "hours": {
+    "title": "Business Hours",
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday",
+    "closed": "Closed"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "We answer your most common questions",
+    "q1Question": "Do I need an appointment for a consultation?",
+    "q1Answer": "We accept walk-ins and appointments. However, we recommend booking via WhatsApp to guarantee immediate attention and reduce wait times.",
+    "q2Question": "What are the requirements for sterilization?",
+    "q2Answer": "Your pet must be over 5 months old, fasting for 12 hours, not nursing, and not in heat. The procedure includes general anesthesia and post-operative follow-up.",
+    "q3Question": "How long does the grooming service take?",
+    "q3Answer": "Time varies depending on size and coat type. A regular bath takes approximately 1-2 hours, while a bath with grooming can take 2-3 hours.",
+    "q4Question": "Do you offer emergency services?",
+    "q4Answer": "We handle emergencies during our regular hours, Tuesday to Sunday, 9:00 AM to 5:30 PM. Contact us via WhatsApp for priority attention.",
+    "q5Question": "Do you have a pickup/delivery service?",
+    "q5Answer": "We offer transportation service to pick up and deliver your pet. Check availability and rates via WhatsApp.",
+    "q6Question": "What payment methods do you accept?",
+    "q6Answer": "We accept cash, debit and credit cards, Yappy, and bank transfers."
+  },
+  "reviews": {
+    "title": "Google Rating",
+    "subtitle": "Based on Google reviews",
+    "cta": "Leave us a review"
+  },
+  "booking": {
+    "title": "Book an Appointment",
+    "subtitle": "Book your grooming or vet consultation online",
+    "pickService": "Select a service",
+    "bath": "Bath",
+    "bathPrice": "From $12.99",
+    "bathCut": "Bath & Haircut",
+    "bathCutPrice": "From $23.99",
+    "catBath": "Cat Bath",
+    "catBathPrice": "From $19.99",
+    "vetConsult": "Vet Consultation",
+    "vetConsultPrice": "Inquire",
+    "pickDate": "Select a date",
+    "pickTime": "Select a time",
+    "noSlots": "No available slots for this date",
+    "petInfo": "Pet Information",
+    "petName": "Pet name",
+    "petType": "Pet type",
+    "dog": "Dog",
+    "cat": "Cat",
+    "other": "Other",
+    "ownerName": "Owner name",
+    "ownerPhone": "Phone",
+    "ownerEmail": "Email (optional)",
+    "notes": "Additional notes",
+    "confirm": "Confirm appointment",
+    "submitting": "Booking...",
+    "error": "Booking error. Please try again.",
+    "successTitle": "Appointment booked!",
+    "successMsg": "Your appointment has been registered. You'll receive a confirmation soon. Contact us via WhatsApp if you need to make changes.",
+    "bookAnother": "Book another appointment",
+    "back": "Back",
+    "sun": "Su", "mon": "Mo", "tue": "Tu", "wed": "We", "thu": "Th", "fri": "Fr", "sat": "Sa",
+    "jan": "January", "feb": "February", "mar": "March", "apr": "April",
+    "may": "May", "jun": "June", "jul": "July", "aug": "August",
+    "sep": "September", "oct": "October", "nov": "November", "dec": "December"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "sterilization": "Esterilización",
+    "grooming": "Peluquería",
+    "about": "Nosotros",
+    "gallery": "Galería",
+    "booking": "Citas",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Cuidamos a tu mascota como parte de la familia",
+    "subtitle": "Clínica veterinaria con servicios completos en Juan Díaz, Panamá",
+    "cta": "Agenda tu cita"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "clinic": "Clínica Veterinaria",
+    "clinicDesc": "Consultas, diagnósticos y tratamientos para tu mascota",
+    "lab": "Laboratorios",
+    "labDesc": "Análisis clínicos con resultados rápidos y confiables",
+    "pharmacy": "Farmacia",
+    "pharmacyDesc": "Medicamentos y suplementos veterinarios",
+    "petshop": "Pet Shop",
+    "petshopDesc": "Alimentos, accesorios y productos para tu mascota",
+    "grooming": "Peluquería / Hotel",
+    "groomingDesc": "Baño, corte y hospedaje para tu compañero",
+    "funeral": "Arreglos Funerarios y Cremaciones",
+    "funeralDesc": "Servicio digno y respetuoso para despedir a tu mascota"
+  },
+  "sterilization": {
+    "title": "Esterilización",
+    "subtitle": "Cuida la salud de tu mascota con un procedimiento seguro y profesional",
+    "dogs": "Perros",
+    "cats": "Gatos",
+    "requirements": "Requisitos",
+    "req1": "Ayuno de 12 horas",
+    "req2": "No lactantes",
+    "req3": "No en celo",
+    "req4": "Mayor a 5 meses"
+  },
+  "groomingSection": {
+    "title": "Nuestros Servicios de Peluquería",
+    "pkg1Title": "BAÑOS",
+    "pkg1Price": "$12.99",
+    "pkg1From": "Desde",
+    "pkg1Items": [
+      "Baño con shampoo y acondicionador",
+      "Secado con sopladora",
+      "Secado con toalla",
+      "Limpieza de oídos",
+      "Corte de uñas"
+    ],
+    "pkg2Title": "BAÑO Y CORTE",
+    "pkg2Price": "$23.99",
+    "pkg2From": "Desde",
+    "pkg2Items": [
+      "Baño con shampoo y acondicionador",
+      "Corte completo del cuerpo",
+      "Arreglo de cara, patas y zona higiénica",
+      "Cepillado completo del pelaje",
+      "Acabado a tijera",
+      "Corte de uñas",
+      "Limpieza de oídos"
+    ],
+    "pkg3Title": "BAÑO DE GATOS",
+    "pkg3Price": "$19.99",
+    "pkg3From": "Desde",
+    "pkg3Items": [
+      "Baño con shampoo y acondicionador",
+      "Secado con sopladora",
+      "Secado con toalla",
+      "Corte de uñas",
+      "Limpieza de oídos"
+    ]
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "text1": "En Veterinaria Vida+ nos dedicamos al cuidado integral de tu mascota. Nuestro equipo de profesionales cuenta con la experiencia y el compromiso para ofrecer atención de calidad.",
+    "text2": "Ubicados en Juan Díaz, Ciudad Radial, somos tu clínica veterinaria de confianza con todos los servicios que tu mascota necesita bajo un mismo techo."
+  },
+  "testimonials": {
+    "title": "Lo que dicen nuestros clientes",
+    "t1": "Excelente atención para mi perrito. El doctor es muy amable y profesional.",
+    "t1Author": "María G.",
+    "t2": "Los precios son justos y el servicio de peluquería deja a mi gato hermoso.",
+    "t2Author": "Carlos R.",
+    "t3": "La mejor veterinaria de Juan Díaz. Siempre atentos y cariñosos con las mascotas.",
+    "t3Author": "Ana P."
+  },
+  "gallery": {
+    "title": "Galería"
+  },
+  "contact": {
+    "title": "Contacto y Ubicación",
+    "phone": "Teléfono",
+    "whatsapp": "WhatsApp",
+    "address": "Dirección",
+    "addressText": "Juan Díaz, Ciudad Radial, Radiant Plaza, Local 1 y 2",
+    "hours": "Horario",
+    "hoursText": "Martes a Domingo: 9:00 AM - 5:30 PM | Lunes: Cerrado",
+    "followUs": "Síguenos"
+  },
+  "hours": {
+    "title": "Horario de Atención",
+    "mon": "Lunes",
+    "tue": "Martes",
+    "wed": "Miércoles",
+    "thu": "Jueves",
+    "fri": "Viernes",
+    "sat": "Sábado",
+    "sun": "Domingo",
+    "closed": "Cerrado"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Resolvemos tus dudas más comunes",
+    "q1Question": "¿Necesito cita previa para consulta?",
+    "q1Answer": "Atendemos con y sin cita previa. Sin embargo, te recomendamos agendar tu cita por WhatsApp para garantizar atención inmediata y reducir tiempo de espera.",
+    "q2Question": "¿Qué requisitos necesita mi mascota para la esterilización?",
+    "q2Answer": "Tu mascota debe tener más de 5 meses de edad, estar en ayuno de 12 horas, no estar en periodo de lactancia ni en celo. El procedimiento incluye anestesia general y seguimiento post-operatorio.",
+    "q3Question": "¿Cuánto tiempo toma el servicio de peluquería?",
+    "q3Answer": "El tiempo varía según el tamaño y tipo de pelaje. Un baño regular toma aproximadamente 1-2 horas, mientras que un baño con corte puede tomar 2-3 horas.",
+    "q4Question": "¿Ofrecen servicio de emergencias?",
+    "q4Answer": "Atendemos emergencias durante nuestro horario regular de martes a domingo, 9:00 AM a 5:30 PM. Contáctanos por WhatsApp para atención prioritaria.",
+    "q5Question": "¿Tienen servicio a domicilio?",
+    "q5Answer": "Contamos con servicio de transporte para recoger y entregar a tu mascota. Consulta disponibilidad y tarifas por WhatsApp.",
+    "q6Question": "¿Qué métodos de pago aceptan?",
+    "q6Answer": "Aceptamos efectivo, tarjetas de débito y crédito, Yappy y transferencias bancarias."
+  },
+  "reviews": {
+    "title": "Calificación en Google",
+    "subtitle": "Basado en reseñas de Google",
+    "cta": "Déjanos una reseña"
+  },
+  "booking": {
+    "title": "Agenda tu Cita",
+    "subtitle": "Reserva en línea tu cita de peluquería o consulta veterinaria",
+    "pickService": "Selecciona el servicio",
+    "bath": "Baño",
+    "bathPrice": "Desde $12.99",
+    "bathCut": "Baño y Corte",
+    "bathCutPrice": "Desde $23.99",
+    "catBath": "Baño de Gatos",
+    "catBathPrice": "Desde $19.99",
+    "vetConsult": "Consulta Veterinaria",
+    "vetConsultPrice": "Consultar",
+    "pickDate": "Selecciona la fecha",
+    "pickTime": "Selecciona la hora",
+    "noSlots": "No hay horarios disponibles para esta fecha",
+    "petInfo": "Información de la mascota",
+    "petName": "Nombre de la mascota",
+    "petType": "Tipo de mascota",
+    "dog": "Perro",
+    "cat": "Gato",
+    "other": "Otro",
+    "ownerName": "Nombre del dueño",
+    "ownerPhone": "Teléfono",
+    "ownerEmail": "Correo electrónico (opcional)",
+    "notes": "Notas adicionales",
+    "confirm": "Confirmar cita",
+    "submitting": "Reservando...",
+    "error": "Error al reservar. Intenta de nuevo.",
+    "successTitle": "¡Cita reservada!",
+    "successMsg": "Tu cita ha sido registrada. Recibirás una confirmación pronto. Puedes contactarnos por WhatsApp si necesitas hacer cambios.",
+    "bookAnother": "Reservar otra cita",
+    "back": "Atrás",
+    "sun": "Do", "mon": "Lu", "tue": "Ma", "wed": "Mi", "thu": "Ju", "fri": "Vi", "sat": "Sá",
+    "jan": "Enero", "feb": "Febrero", "mar": "Marzo", "apr": "Abril",
+    "may": "Mayo", "jun": "Junio", "jul": "Julio", "aug": "Agosto",
+    "sep": "Septiembre", "oct": "Octubre", "nov": "Noviembre", "dec": "Diciembre"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados"
+  }
+}

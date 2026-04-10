@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Blue rounded square background -->
+  <rect width="48" height="48" rx="10" fill="#017AAB"/>
+  <!-- Red cross (Vida+ logo) -->
+  <rect x="19" y="8" width="10" height="32" rx="3" fill="#e74c3c"/>
+  <rect x="8" y="19" width="32" height="10" rx="3" fill="#e74c3c"/>
+</svg>
