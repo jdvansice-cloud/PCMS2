@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaWhatsapp, FaCalendarCheck, FaTag } from 'react-icons/fa'
 import { supabase } from '../lib/supabase'
+import { useBooking } from '../lib/BookingContext'
 
 const photos = [
   { src: '/images/hero-vet-cat.png', alt: 'Veterinario examinando gato' },
@@ -13,6 +14,7 @@ const photos = [
 
 export default function Hero() {
   const { t } = useTranslation()
+  const { openBooking } = useBooking()
   const [discount, setDiscount] = useState<{ percent: number; label: string } | null>(null)
 
   useEffect(() => {
@@ -52,13 +54,13 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4 mb-6">
               {/* Book Online */}
               <div className="flex flex-col items-center gap-2">
-                <a
-                  href="#booking"
-                  className="inline-flex items-center gap-2 bg-white text-primary font-bold py-4 px-8 rounded-full text-lg transition-transform hover:scale-105 shadow-lg"
+                <button
+                  onClick={openBooking}
+                  className="inline-flex items-center gap-2 bg-white text-primary font-bold py-4 px-8 rounded-full text-lg transition-transform hover:scale-105 shadow-lg cursor-pointer"
                 >
                   <FaCalendarCheck className="text-xl" />
                   {t('hero.bookOnline')}
-                </a>
+                </button>
                 {discount && (
                   <div className="flex items-center gap-1.5 bg-yellow-400 text-gray-900 font-bold text-sm px-4 py-1.5 rounded-full animate-pulse shadow-md">
                     <FaTag className="text-xs" />
