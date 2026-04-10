@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FaWhatsapp, FaCalendarCheck } from 'react-icons/fa'
 
 const photos = [
   { src: '/images/hero-vet-cat.png', alt: 'Veterinario examinando gato' },
@@ -30,8 +30,15 @@ export default function Hero() {
               {t('hero.subtitle')}
             </p>
 
-            {/* CTA + WhatsApp number */}
-            <div className="inline-flex flex-col items-center gap-3">
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+              <a
+                href="#booking"
+                className="inline-flex items-center gap-2 bg-white text-primary font-bold py-4 px-8 rounded-full text-lg transition-transform hover:scale-105 shadow-lg"
+              >
+                <FaCalendarCheck className="text-xl" />
+                {t('hero.bookOnline')}
+              </a>
               <a
                 href="https://wa.me/50766386310"
                 target="_blank"
@@ -41,8 +48,8 @@ export default function Hero() {
                 <FaWhatsapp className="text-2xl" />
                 {t('hero.cta')}
               </a>
-              <span className="text-white/80 text-lg">+507 6638-6310</span>
             </div>
+            <span className="text-white/80 text-lg">+507 6638-6310</span>
           </div>
 
           {/* Right: Photo collage */}

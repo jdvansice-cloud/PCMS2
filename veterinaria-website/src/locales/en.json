@@ -12,7 +12,8 @@
   "hero": {
     "title": "We care for your pet like family",
     "subtitle": "Full-service veterinary clinic in Juan Díaz, Panama",
-    "cta": "Book an appointment"
+    "cta": "Book an appointment",
+    "bookOnline": "Book Online"
   },
   "services": {
     "title": "Our Services",

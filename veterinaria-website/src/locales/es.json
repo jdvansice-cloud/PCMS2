@@ -12,7 +12,8 @@
   "hero": {
     "title": "Cuidamos a tu mascota como parte de la familia",
     "subtitle": "Clínica veterinaria con servicios completos en Juan Díaz, Panamá",
-    "cta": "Agenda tu cita"
+    "cta": "Agenda tu cita",
+    "bookOnline": "Reserva en línea"
   },
   "services": {
     "title": "Nuestros Servicios",
