@@ -23,7 +23,7 @@ export default function ServicePicker({ onSelect, discount }: Props) {
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {services.map(({ key, icon: Icon, priceKey, price }) => {
-          const hasDiscount = discount && discount.percent > 0 && price > 0
+          const hasDiscount = discount && discount.percent > 0
           const discountedPrice = hasDiscount
             ? (price * (1 - discount.percent / 100)).toFixed(2)
             : null
@@ -45,7 +45,7 @@ export default function ServicePicker({ onSelect, discount }: Props) {
               <p className="font-bold text-gray-800 text-sm mb-1">
                 {t(`booking.${key}`)}
               </p>
-              {hasDiscount ? (
+              {hasDiscount && price > 0 ? (
                 <div>
                   <p className="text-gray-400 line-through text-sm">{t(priceKey)}</p>
                   <p className="text-green-600 font-bold text-lg">${discountedPrice}</p>
