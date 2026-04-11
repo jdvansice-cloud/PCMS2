@@ -33,13 +33,13 @@ export default function PromoBanner() {
     <div className="fixed top-0 left-0 right-0 z-[60] bg-yellow-400 text-gray-900 overflow-hidden whitespace-nowrap h-9">
       <div className="animate-ticker inline-flex">
         {repeated.map((msg, i) => (
-          <span key={i} className="inline-flex items-center gap-2 text-sm font-bold px-8 py-1.5">
+          <span key={i} className="inline-flex items-center gap-2 text-sm font-bold px-32 py-1.5">
             <FaTag className="text-xs" />
             {msg}
           </span>
         ))}
         {repeated.map((msg, i) => (
-          <span key={`dup-${i}`} className="inline-flex items-center gap-2 text-sm font-bold px-8 py-1.5">
+          <span key={`dup-${i}`} className="inline-flex items-center gap-2 text-sm font-bold px-32 py-1.5">
             <FaTag className="text-xs" />
             {msg}
           </span>
