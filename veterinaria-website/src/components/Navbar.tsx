@@ -18,12 +18,11 @@ export default function Navbar() {
     { href: '#sterilization', label: t('nav.sterilization') },
     { href: '#grooming', label: t('nav.grooming') },
     { href: '#about', label: t('nav.about') },
-    { href: '#gallery', label: t('nav.gallery') },
     { href: '#contact', label: t('nav.contact') },
   ]
 
   return (
-    <nav className="bg-primary text-white fixed top-0 w-full z-50 shadow-lg">
+    <nav id="main-nav" className="bg-primary text-white fixed top-0 w-full z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <a href="#home" className="text-xl font-bold tracking-tight">
           VETERINARIA <span className="text-white">Vida</span>

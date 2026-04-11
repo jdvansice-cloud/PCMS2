@@ -1,4 +1,7 @@
 {
+  "promoBanner": {
+    "off": "de descuento"
+  },
   "nav": {
     "home": "Inicio",
     "services": "Servicios",
@@ -164,7 +167,7 @@
     "catBath": "Baño de Gatos",
     "catBathPrice": "Desde $19.99",
     "vetConsult": "Consulta Veterinaria",
-    "vetConsultPrice": "Consultar",
+    "vetConsultPrice": "",
     "pickDate": "Selecciona la fecha",
     "pickTime": "Selecciona la hora",
     "noSlots": "No hay horarios disponibles para esta fecha",

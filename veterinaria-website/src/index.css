@@ -17,6 +17,28 @@ body {
   font-family: var(--font-family-sans);
 }
 
+/* When promo banner is active, push navbar and hero down */
+html[data-promo="true"] #main-nav {
+  top: 2.25rem; /* 36px = h-9 */
+}
+
+html[data-promo="true"] #home {
+  padding-top: 6.25rem; /* 64px navbar + 36px banner */
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-ticker {
+  animation: ticker 80s linear infinite;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;

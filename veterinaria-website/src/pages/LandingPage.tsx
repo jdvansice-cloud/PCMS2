@@ -1,5 +1,6 @@
 import { BookingProvider, useBooking } from '../lib/BookingContext'
 import BookingModal from '../components/booking/BookingModal'
+import PromoBanner from '../components/PromoBanner'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Services from '../components/Services'
@@ -10,7 +11,7 @@ import AboutUs from '../components/AboutUs'
 import GoogleReviews from '../components/GoogleReviews'
 import Testimonials from '../components/Testimonials'
 import FAQ from '../components/FAQ'
-import Gallery from '../components/Gallery'
+// import Gallery from '../components/Gallery'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import WhatsAppButton from '../components/WhatsAppButton'
@@ -20,6 +21,7 @@ function LandingContent() {
 
   return (
     <>
+      <PromoBanner />
       <Navbar />
       <Hero />
       <Services />
@@ -30,7 +32,7 @@ function LandingContent() {
       <GoogleReviews />
       <Testimonials />
       <FAQ />
-      <Gallery />
+      {/* <Gallery /> */}
       <Contact />
       <Footer />
       <WhatsAppButton />

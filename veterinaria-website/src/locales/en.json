@@ -1,4 +1,7 @@
 {
+  "promoBanner": {
+    "off": "off"
+  },
   "nav": {
     "home": "Home",
     "services": "Services",
@@ -164,7 +167,7 @@
     "catBath": "Cat Bath",
     "catBathPrice": "From $19.99",
     "vetConsult": "Vet Consultation",
-    "vetConsultPrice": "Inquire",
+    "vetConsultPrice": "",
     "pickDate": "Select a date",
     "pickTime": "Select a time",
     "noSlots": "No available slots for this date",
