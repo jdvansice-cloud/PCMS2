@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote, FaPlus, FaEdit, FaGlobe, FaUserCog } from 'react-icons/fa'
+import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote, FaPlus, FaEdit, FaGlobe, FaUserCog, FaTruck, FaMapMarkerAlt } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
 import type { WebBooking } from '../../lib/types'
 import AppointmentFormModal from './AppointmentFormModal'
@@ -187,6 +187,17 @@ export default function AppointmentList({ date, onBack }: Props) {
                   <div className="flex items-center gap-2 text-gray-700">
                     <FaEnvelope className="text-primary text-xs flex-shrink-0" />
                     <a href={`mailto:${bk.owner_email}`} className="hover:underline">{bk.owner_email}</a>
+                  </div>
+                )}
+                {bk.needs_pickup && (
+                  <div className="flex items-start gap-2 text-green-700 sm:col-span-2">
+                    <FaTruck className="text-green-600 text-xs flex-shrink-0 mt-0.5" />
+                    <span className="font-bold">Servicio a domicilio</span>
+                    {bk.pickup_address && (
+                      <span className="flex items-center gap-1 text-gray-600 font-normal">
+                        <FaMapMarkerAlt className="text-[10px]" /> {bk.pickup_address}
+                      </span>
+                    )}
                   </div>
                 )}
                 {bk.notes && (

@@ -40,9 +40,31 @@ export interface WebBooking {
   owner_phone: string
   owner_email: string | null
   notes: string | null
+  needs_pickup: boolean
+  pickup_lat: number | null
+  pickup_lng: number | null
+  pickup_address: string | null
   source: 'online' | 'admin'
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
   created_at: string
+}
+
+export interface Route {
+  id: number
+  route_date: string
+  name: string
+  status: 'pending' | 'in_progress' | 'completed'
+  created_at: string
+}
+
+export interface RouteStop {
+  id: number
+  route_id: number
+  booking_id: number
+  stop_order: number
+  estimated_time: string | null
+  status: 'pending' | 'picked_up' | 'delivered'
+  booking?: WebBooking
 }
 
 export const GROOMING_SERVICES = ['bath', 'bathCut', 'catBath']

@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
-import { FaCalendarAlt, FaBan, FaUserMd, FaCut, FaTag, FaSignOutAlt } from 'react-icons/fa'
+import { FaCalendarAlt, FaBan, FaUserMd, FaCut, FaTag, FaSignOutAlt, FaRoute } from 'react-icons/fa'
 import AdminCalendar from './AdminCalendar'
 import AppointmentList from './AppointmentList'
 import BlockedDatesManager from './BlockedDatesManager'
 import DrAvailabilityManager from './DrAvailabilityManager'
 import GroomingSettingsManager from './GroomingSettingsManager'
 import PromoManager from './PromoManager'
+import RouteManager from './RouteManager'
 
-type Tab = 'calendar' | 'blocked' | 'drHours' | 'grooming' | 'promo'
+type Tab = 'calendar' | 'blocked' | 'drHours' | 'grooming' | 'promo' | 'routes'
 
 interface Props {
   session: Session
@@ -28,6 +29,7 @@ export default function AdminLayout({ session }: Props) {
     { key: 'blocked' as Tab, label: 'Fechas Bloqueadas', icon: FaBan },
     { key: 'drHours' as Tab, label: 'Disponibilidad del Dr.', icon: FaUserMd },
     { key: 'grooming' as Tab, label: 'Peluquería', icon: FaCut },
+    { key: 'routes' as Tab, label: 'Rutas', icon: FaRoute },
     { key: 'promo' as Tab, label: 'Promoción', icon: FaTag },
   ]
 
@@ -77,6 +79,7 @@ export default function AdminLayout({ session }: Props) {
         {tab === 'blocked' && <BlockedDatesManager />}
         {tab === 'drHours' && <DrAvailabilityManager />}
         {tab === 'grooming' && <GroomingSettingsManager />}
+        {tab === 'routes' && <RouteManager />}
         {tab === 'promo' && <PromoManager />}
       </div>
     </div>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaChevronDown } from 'react-icons/fa'
 
-const faqKeys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'] as const
+const faqKeys = ['q1', 'q2', 'q3', 'q5', 'q6'] as const
 
 export default function FAQ() {
   const { t } = useTranslation()
