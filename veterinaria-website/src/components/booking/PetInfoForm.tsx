@@ -1,27 +1,33 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaChevronLeft } from 'react-icons/fa'
+import { isGroomingService } from '../../lib/types'
 
 interface Props {
   onSubmit: (info: PetInfo) => void
   onBack: () => void
   submitting: boolean
+  service: string
 }
 
 export interface PetInfo {
   petName: string
   petType: string
+  petSize: string
   ownerName: string
   ownerPhone: string
   ownerEmail: string
   notes: string
 }
 
-export default function PetInfoForm({ onSubmit, onBack, submitting }: Props) {
+export default function PetInfoForm({ onSubmit, onBack, submitting, service }: Props) {
   const { t } = useTranslation()
+  const isGrooming = isGroomingService(service)
+
   const [form, setForm] = useState<PetInfo>({
     petName: '',
     petType: 'dog',
+    petSize: '',
     ownerName: '',
     ownerPhone: '',
     ownerEmail: '',
@@ -70,6 +76,25 @@ export default function PetInfoForm({ onSubmit, onBack, submitting }: Props) {
             <option value="other">{t('booking.other')}</option>
           </select>
         </div>
+
+        {/* Size dropdown for grooming services (dogs) */}
+        {isGrooming && form.petType === 'dog' && (
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">{t('booking.petSize')} *</label>
+            <select
+              required
+              value={form.petSize}
+              onChange={e => update('petSize', e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors"
+            >
+              <option value="">--</option>
+              <option value="small">{t('booking.sizeSmall')}</option>
+              <option value="medium">{t('booking.sizeMedium')}</option>
+              <option value="large">{t('booking.sizeLarge')}</option>
+              <option value="xl">{t('booking.sizeXL')}</option>
+            </select>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-1">{t('booking.ownerName')} *</label>

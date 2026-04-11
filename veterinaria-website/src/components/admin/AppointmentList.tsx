@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote } from 'react-icons/fa'
+import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote, FaPlus, FaEdit } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
 import type { WebBooking } from '../../lib/types'
+import AppointmentFormModal from './AppointmentFormModal'
 
 interface Props {
   date: string
@@ -13,6 +14,13 @@ const serviceLabels: Record<string, string> = {
   bathCut: 'Baño y Corte',
   catBath: 'Baño de Gatos',
   vetConsult: 'Consulta Veterinaria',
+}
+
+const sizeLabels: Record<string, string> = {
+  small: 'Pequeño',
+  medium: 'Mediano',
+  large: 'Grande',
+  xl: 'XL',
 }
 
 const statusColors: Record<string, string> = {
@@ -40,6 +48,8 @@ export default function AppointmentList({ date, onBack }: Props) {
   const [bookings, setBookings] = useState<WebBooking[]>([])
   const [loading, setLoading] = useState(true)
   const [cancelId, setCancelId] = useState<number | null>(null)
+  const [showForm, setShowForm] = useState(false)
+  const [editBooking, setEditBooking] = useState<WebBooking | null>(null)
 
   const fetchBookings = useCallback(async () => {
     const { data } = await supabase
@@ -61,6 +71,16 @@ export default function AppointmentList({ date, onBack }: Props) {
     fetchBookings()
   }
 
+  function openCreate() {
+    setEditBooking(null)
+    setShowForm(true)
+  }
+
+  function openEdit(bk: WebBooking) {
+    setEditBooking(bk)
+    setShowForm(true)
+  }
+
   const dateObj = new Date(date + 'T00:00:00')
   const formattedDate = dateObj.toLocaleDateString('es-PA', {
     weekday: 'long',
@@ -75,7 +95,15 @@ export default function AppointmentList({ date, onBack }: Props) {
         <FaChevronLeft className="text-xs" /> Volver al calendario
       </button>
 
-      <h2 className="text-xl font-bold text-gray-800 mb-1 capitalize">{formattedDate}</h2>
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="text-xl font-bold text-gray-800 capitalize">{formattedDate}</h2>
+        <button
+          onClick={openCreate}
+          className="flex items-center gap-2 bg-primary text-white font-bold px-4 py-2 rounded-xl hover:bg-primary-dark transition-colors cursor-pointer text-sm"
+        >
+          <FaPlus /> Nueva Cita
+        </button>
+      </div>
       <p className="text-gray-500 text-sm mb-6">{bookings.filter(b => b.status !== 'cancelled').length} cita(s)</p>
 
       {loading ? (
@@ -102,37 +130,47 @@ export default function AppointmentList({ date, onBack }: Props) {
                   </span>
                 </div>
 
-                {bk.status !== 'cancelled' && bk.status !== 'completed' && (
-                  <div className="flex gap-2 shrink-0">
-                    {bk.status === 'pending' && (
+                <div className="flex gap-2 shrink-0">
+                  {/* Edit button — always visible */}
+                  <button
+                    onClick={() => openEdit(bk)}
+                    className="flex items-center gap-1 text-sm bg-gray-50 text-gray-600 font-bold px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
+                  >
+                    <FaEdit /> Editar
+                  </button>
+
+                  {bk.status !== 'cancelled' && bk.status !== 'completed' && (
+                    <>
+                      {bk.status === 'pending' && (
+                        <button
+                          onClick={() => updateStatus(bk.id, 'confirmed')}
+                          className="flex items-center gap-1 text-sm bg-green-50 text-green-600 font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-colors cursor-pointer"
+                        >
+                          <FaCheck /> Confirmar
+                        </button>
+                      )}
                       <button
-                        onClick={() => updateStatus(bk.id, 'confirmed')}
-                        className="flex items-center gap-1 text-sm bg-green-50 text-green-600 font-bold px-3 py-2 rounded-xl hover:bg-green-100 transition-colors cursor-pointer"
+                        onClick={() => updateStatus(bk.id, 'completed')}
+                        className="flex items-center gap-1 text-sm bg-blue-50 text-blue-600 font-bold px-3 py-2 rounded-xl hover:bg-blue-100 transition-colors cursor-pointer"
                       >
-                        <FaCheck /> Confirmar
+                        <FaFlag /> Completar
                       </button>
-                    )}
-                    <button
-                      onClick={() => updateStatus(bk.id, 'completed')}
-                      className="flex items-center gap-1 text-sm bg-blue-50 text-blue-600 font-bold px-3 py-2 rounded-xl hover:bg-blue-100 transition-colors cursor-pointer"
-                    >
-                      <FaFlag /> Completar
-                    </button>
-                    <button
-                      onClick={() => setCancelId(bk.id)}
-                      className="flex items-center gap-1 text-sm bg-red-50 text-red-600 font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-colors cursor-pointer"
-                    >
-                      <FaTimes /> Cancelar
-                    </button>
-                  </div>
-                )}
+                      <button
+                        onClick={() => setCancelId(bk.id)}
+                        className="flex items-center gap-1 text-sm bg-red-50 text-red-600 font-bold px-3 py-2 rounded-xl hover:bg-red-100 transition-colors cursor-pointer"
+                      >
+                        <FaTimes /> Cancelar
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Details grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2 text-gray-700">
                   <FaPaw className="text-primary text-xs flex-shrink-0" />
-                  <span><strong>{bk.pet_name}</strong> ({bk.pet_type})</span>
+                  <span><strong>{bk.pet_name}</strong> ({bk.pet_type}){bk.pet_size && ` — ${sizeLabels[bk.pet_size] || bk.pet_size}`}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-700">
                   <FaUser className="text-primary text-xs flex-shrink-0" />
@@ -192,6 +230,15 @@ export default function AppointmentList({ date, onBack }: Props) {
           </div>
         </div>
       )}
+
+      {/* Create / Edit appointment modal */}
+      <AppointmentFormModal
+        open={showForm}
+        onClose={() => { setShowForm(false); setEditBooking(null) }}
+        onSaved={fetchBookings}
+        date={date}
+        booking={editBooking}
+      />
     </div>
   )
 }

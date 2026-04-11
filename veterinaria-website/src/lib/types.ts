@@ -35,6 +35,7 @@ export interface WebBooking {
   booking_time: string | null // HH:MM or null for grooming
   pet_name: string
   pet_type: string
+  pet_size: string | null
   owner_name: string
   owner_phone: string
   owner_email: string | null

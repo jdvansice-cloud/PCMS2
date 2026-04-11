@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FaCheckCircle, FaShower, FaCut, FaCat, FaStethoscope, FaCalendarAlt, FaClock, FaPaw, FaUser } from 'react-icons/fa'
+import { FaCheckCircle, FaShower, FaCut, FaCat, FaStethoscope, FaCalendarAlt, FaClock, FaPaw, FaUser, FaTag } from 'react-icons/fa'
 
 interface Props {
   onReset: () => void
@@ -8,6 +8,7 @@ interface Props {
   time: string
   petName: string
   ownerName: string
+  discount?: { percent: number; label: string } | null
 }
 
 const serviceIcons: Record<string, typeof FaShower> = {
@@ -30,7 +31,7 @@ function formatTime(timeStr: string) {
   return `${hour12}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
-export default function BookingConfirmation({ onReset, service, date, time, petName, ownerName }: Props) {
+export default function BookingConfirmation({ onReset, service, date, time, petName, ownerName, discount }: Props) {
   const { t } = useTranslation()
   const Icon = serviceIcons[service] || FaShower
 
@@ -94,6 +95,19 @@ export default function BookingConfirmation({ onReset, service, date, time, petN
               <div>
                 <p className="text-xs text-gray-400">{t('booking.summaryTime')}</p>
                 <p className="font-bold text-gray-800">{formatTime(time)}</p>
+              </div>
+            </div>
+          )}
+          {discount && (
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <FaTag className="text-yellow-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">{t('booking.discountOff')}</p>
+                <p className="font-bold text-yellow-600">
+                  {discount.percent}% {t('booking.discountOff')}{discount.label && ` — ${discount.label}`}
+                </p>
               </div>
             </div>
           )}

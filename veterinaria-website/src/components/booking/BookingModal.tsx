@@ -83,6 +83,7 @@ export default function BookingModal({ open, onClose }: Props) {
         booking_time: time || null,
         pet_name: info.petName,
         pet_type: info.petType,
+        pet_size: info.petSize || null,
         owner_name: info.ownerName,
         owner_phone: info.ownerPhone,
         owner_email: info.ownerEmail || null,
@@ -239,9 +240,10 @@ export default function BookingModal({ open, onClose }: Props) {
               onSubmit={handleSubmit}
               onBack={() => setStep(isGrooming ? 'date' : 'time')}
               submitting={submitting}
+              service={service}
             />
           )}
-          {step === 'done' && <BookingConfirmation onReset={reset} service={service} date={date} time={time} petName={petInfo?.petName || ''} ownerName={petInfo?.ownerName || ''} />}
+          {step === 'done' && <BookingConfirmation onReset={reset} service={service} date={date} time={time} petName={petInfo?.petName || ''} ownerName={petInfo?.ownerName || ''} discount={discount} />}
         </div>
       </div>
     </div>
