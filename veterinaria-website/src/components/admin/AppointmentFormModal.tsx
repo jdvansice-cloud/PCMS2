@@ -1,8 +1,28 @@
 import { useState, useEffect } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaTruck, FaMapMarkerAlt } from 'react-icons/fa'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import { Icon } from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 import { supabase } from '../../lib/supabase'
 import { isGroomingService } from '../../lib/types'
 import type { WebBooking } from '../../lib/types'
+
+const markerIcon = new Icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+})
+
+function MapClickHandler({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onLocationSelect(e.latlng.lat, e.latlng.lng)
+    },
+  })
+  return null
+}
 
 interface Props {
   open: boolean
@@ -40,6 +60,10 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
   const [ownerPhone, setOwnerPhone] = useState(booking?.owner_phone || '')
   const [ownerEmail, setOwnerEmail] = useState(booking?.owner_email || '')
   const [notes, setNotes] = useState(booking?.notes || '')
+  const [needsPickup, setNeedsPickup] = useState(booking?.needs_pickup || false)
+  const [pickupLat, setPickupLat] = useState<number | null>(booking?.pickup_lat || null)
+  const [pickupLng, setPickupLng] = useState<number | null>(booking?.pickup_lng || null)
+  const [pickupAddress, setPickupAddress] = useState(booking?.pickup_address || '')
   const [status, setStatus] = useState(booking?.status || 'confirmed')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -57,6 +81,10 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
       setOwnerPhone(booking.owner_phone)
       setOwnerEmail(booking.owner_email || '')
       setNotes(booking.notes || '')
+      setNeedsPickup(booking.needs_pickup || false)
+      setPickupLat(booking.pickup_lat || null)
+      setPickupLng(booking.pickup_lng || null)
+      setPickupAddress(booking.pickup_address || '')
       setStatus(booking.status)
     } else {
       setService('bath')
@@ -69,6 +97,10 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
       setOwnerPhone('')
       setOwnerEmail('')
       setNotes('')
+      setNeedsPickup(false)
+      setPickupLat(null)
+      setPickupLng(null)
+      setPickupAddress('')
       setStatus('confirmed')
     }
   }, [booking, date])
@@ -102,6 +134,10 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
       owner_phone: ownerPhone.trim(),
       owner_email: ownerEmail.trim() || null,
       notes: notes.trim() || null,
+      needs_pickup: needsPickup,
+      pickup_lat: needsPickup ? pickupLat : null,
+      pickup_lng: needsPickup ? pickupLng : null,
+      pickup_address: needsPickup ? pickupAddress || null : null,
       status,
       ...(!isEdit ? { source: 'admin' as const } : {}),
     }
@@ -312,6 +348,75 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
               className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
             />
           </div>
+
+          <hr className="border-gray-100" />
+
+          {/* Pickup toggle + map */}
+          <div>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={needsPickup}
+                onChange={e => setNeedsPickup(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/30"
+              />
+              <span className="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                <FaTruck className="text-green-600" /> Servicio a domicilio
+              </span>
+            </label>
+          </div>
+
+          {needsPickup && (
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">
+                <FaMapMarkerAlt className="inline text-primary mr-1" />
+                Ubicación de recogida
+              </label>
+              <div className="rounded-xl overflow-hidden border border-gray-200 mb-2" style={{ height: 200 }}>
+                <MapContainer
+                  center={pickupLat && pickupLng ? [pickupLat, pickupLng] : [9.0, -79.47]}
+                  zoom={13}
+                  style={{ height: '100%', width: '100%' }}
+                  scrollWheelZoom={true}
+                >
+                  <TileLayer
+                    attribution='&copy; OpenStreetMap'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <MapClickHandler onLocationSelect={async (lat, lng) => {
+                    setPickupLat(lat)
+                    setPickupLng(lng)
+                    try {
+                      const res = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18`,
+                        { headers: { 'Accept-Language': 'es' } }
+                      )
+                      const data = await res.json()
+                      if (data.display_name) setPickupAddress(data.display_name)
+                    } catch {
+                      setPickupAddress(`${lat.toFixed(5)}, ${lng.toFixed(5)}`)
+                    }
+                  }} />
+                  {pickupLat && pickupLng && (
+                    <Marker position={[pickupLat, pickupLng]} icon={markerIcon} />
+                  )}
+                </MapContainer>
+              </div>
+              {pickupAddress && (
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  <FaMapMarkerAlt className="text-[10px] text-primary" />
+                  {pickupAddress}
+                </p>
+              )}
+              <input
+                type="text"
+                value={pickupAddress}
+                onChange={e => setPickupAddress(e.target.value)}
+                placeholder="Dirección (o toca el mapa)"
+                className="w-full mt-2 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+            </div>
+          )}
 
           {error && (
             <p className="text-red-500 text-sm font-medium">{error}</p>
