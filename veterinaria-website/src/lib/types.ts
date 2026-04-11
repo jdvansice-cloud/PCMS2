@@ -40,6 +40,7 @@ export interface WebBooking {
   owner_phone: string
   owner_email: string | null
   notes: string | null
+  source: 'online' | 'admin'
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
   created_at: string
 }

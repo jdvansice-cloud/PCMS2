@@ -103,6 +103,7 @@ export default function AppointmentFormModal({ open, onClose, onSaved, date, boo
       owner_email: ownerEmail.trim() || null,
       notes: notes.trim() || null,
       status,
+      ...(!isEdit ? { source: 'admin' as const } : {}),
     }
 
     let err

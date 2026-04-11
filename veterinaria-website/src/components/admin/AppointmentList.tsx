@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote, FaPlus, FaEdit } from 'react-icons/fa'
+import { FaChevronLeft, FaCheck, FaTimes, FaFlag, FaPaw, FaUser, FaPhone, FaEnvelope, FaStickyNote, FaPlus, FaEdit, FaGlobe, FaUserCog } from 'react-icons/fa'
 import { supabase } from '../../lib/supabase'
 import type { WebBooking } from '../../lib/types'
 import AppointmentFormModal from './AppointmentFormModal'
@@ -127,6 +127,9 @@ export default function AppointmentList({ date, onBack }: Props) {
                   </span>
                   <span className="text-sm font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
                     {serviceLabels[bk.service] || bk.service}
+                  </span>
+                  <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 ${bk.source === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-teal-100 text-teal-700'}`}>
+                    {bk.source === 'admin' ? <><FaUserCog className="text-[10px]" /> Admin</> : <><FaGlobe className="text-[10px]" /> Online</>}
                   </span>
                 </div>
 
